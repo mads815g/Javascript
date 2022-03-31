@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
+    <script src="https://unpkg.com/vue@next"></script>
+    <title>IMDB</title>
+</head>
+<body>
+    <div id="app">
+        <h1>IMDB DATA</h1>
+        <button id="getAllActorButton" v-on:click="getAllActorData" class="btn btn-primary">Get all actor data</button>
+        <button id="getAllMovieButton" v-on:click="getAllMovieData" class="btn btn-primary">Get all movie data</button>
+
+        <!-- <input v-model.number="valueToGetByJS" placeholder="minimum speed" type="number">
+        <button id="getByValueButtonJS" v-on:click="filteredByJavascript(valueToGetByJS)" class="btn btn-primary">Get by minimum speed JS</button> -->
+
+        <table v-if="Data.length" class="table table-striped">
+            <tr>
+                <th>primaryName</th>
+                <th>birthYear</th>
+                <th>deatYear</th>
+                <th>primaryTitle</th>
+                <th>category</th>
+                <th>job</th>
+                <th>characters</th>
+            </tr>
+            <tr v-for="data in Data">
+                <td>{{data.primaryName}}</td>
+                <td>{{data.birthYear}}</td>
+                <td>{{data.deatYear}}</td>
+                <td>{{data.primaryTitle}}</td>
+                <td>{{data.category}}</td>
+                <td>{{data.job}}</td>
+                <td>{{data.characters}}</td>
+            </tr>
+        </table>
+        <div v-else>No actor data</div>
+
+        <table v-if="movieData.length" class="table table-striped">
+            <tr>
+                <th>primaryTitle</th>
+                <th>originalTitle</th>
+                <th>isAdult</th>
+                <th>startYear</th>
+                <th>isOriginalTitle</th>
+                <th>genre</th>
+                <th>averageRating</th>
+                <th>characters</th>
+                <th>primaryName</th>
+            </tr>
+            <tr v-for="data in movieData">
+                <td>{{data.primaryTitle}}</td>
+                <td>{{data.originalTitle}}</td>
+                <td>{{data.isAdult}}</td>
+                <td>{{data.startYear}}</td>
+                <td>{{data.isOriginalTitle}}</td>
+                <td>{{data.genre}}</td>
+                <td>{{data.averageRating}}</td>
+                <td>{{data.characters}}</td>
+                <td>{{data.primaryName}}</td>
+            </tr>
+        </table>
+        <div v-else>No movie data</div>
+
+        <h3>Get</h3>
+        <input v-model="name" placeholder="Name" type="text" />
+        <button v-on:click="getActorByName(name)" class="btn btn-primary">Get actor by name</button>
+        <div v-if="actor">
+            {{actor.primaryName}}
+        </div>
+        <div v-else>No such actor</div>
+
+        <input v-model="name" placeholder="Name" type="text" />
+        <button v-on:click="getMovieByName(name)" class="btn btn-primary">Get movie by name</button>
+        <div v-if="movie">
+            {{movie.primaryTitle}}
+        </div>
+        <div v-else>No such movie</div>
+
+        <h3>Delete Actor</h3>
+        <input v-model.number="name" placeholder="name" type="text" />
+        <button v-on:click="deleteActor(name)" class="btn btn-warning">Delete Actor</button>
+
+        <h3>Delete Movie</h3>
+        <input v-model.number="name" placeholder="name" type="text" />
+        <button v-on:click="deleteMovie(name)" class="btn btn-warning">Delete Movie</button>
+
+        <h3>Add Actor</h3>
+        <input v-model="addActorData.nconst" placeholder="nconst" type="text" />
+        <input v-model="addActorData.primaryName" placeholder="primaryName" type="text" />
+        <input v-model.number="addActorData.birthYear" placeholder="birthYear" type="number" />
+        <input v-model.number="addActorData.deatYear" placeholder="deatYear" type="number" />
+        <button v-on:click="addActor()" class="btn btn-success">Add Actor</button>
+
+        <h3>Add Movie</h3>
+        <input v-model="addMovieData.tconst" placeholder="tconst" type="text" />
+        <input v-model="addMovieData.titleType" placeholder="titleType" type="text" />
+        <input v-model="addMovieData.primaryTitle" placeholder="primaryTitle" type="text" />
+        <input v-model="addMovieData.originalTitle" placeholder="originalTitle" type="text" />
+        <input v-model="addMovieData.isAdult" placeholder="isAdult" type="bool" />
+        <input v-model.number="addMovieData.startYear" placeholder="startYear" type="number" />
+        <input v-model.number="addMovieData.endYear" placeholder="endYear" type="number" />
+        <input v-model.number="addMovieData.runTimeMinutes" placeholder="runTimeMinutes" type="number" />
+        <button v-on:click="addMovie()" class="btn btn-success">Add Movie</button>
+
+        <h3>Update Actor</h3>
+        <input v-model="updateActorData.nconst" placeholder="nconst" type="text" />
+        <input v-model="updateActorData.primaryName" placeholder="primaryName" type="text" />
+        <input v-model.number="updateActorData.birthYear" placeholder="vendor" type="number" />
+        <input v-model.number="updateActorData.deatYear" placeholder="price" type="number" />
+        <button v-on:click="updateActor()" class="btn btn-success">Update Actor</button>
+
+        <h3>Update Movie</h3>
+        <input v-model="updateMovieData.tconst" placeholder="tconst" type="text" />
+        <input v-model="updateMovieData.titleType" placeholder="titleType" type="text" />
+        <input v-model="updateMovieData.primaryTitle" placeholder="primaryTitle" type="text" />
+        <input v-model="updateMovieData.originalTitle" placeholder="originalTitle" type="text" />
+        <input v-model="updateMovieData.isAdult" placeholder="isAdult" type="bool" />
+        <input v-model.number="updateMovieData.startYear" placeholder="startYear" type="number" />
+        <input v-model.number="updateMovieData.endYear" placeholder="endYear" type="number" />
+        <input v-model.number="updateMovieData.runTimeMinutes" placeholder="runTimeMinutes" type="number" />
+        <button v-on:click="updateMovie()" class="btn btn-success">Update Movie</button>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
