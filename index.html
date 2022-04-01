@@ -70,14 +70,14 @@
         <input v-model="name" placeholder="Name" type="text" />
         <button v-on:click="getActorByName(name)" class="btn btn-primary">Get actor by name</button>
         <div v-if="actor">
-            {{actor.primaryName}}
+            {{actor.primaryName}},{{actor.birthYear}},{{actor.deatYear}},{{actor.primaryTitle}},{{actor.category}},{{actor.job}},{{actor.characters}}
         </div>
         <div v-else>No such actor</div>
 
         <input v-model="name" placeholder="Name" type="text" />
         <button v-on:click="getMovieByName(name)" class="btn btn-primary">Get movie by name</button>
         <div v-if="movie">
-            {{movie.primaryTitle}}
+            {{movie.primaryTitle}},{{movie.originalTitle}},{{movie.isAdult}},{{movie.startYear}},{{movie.isOriginalTitle}},{{movie.genre}},{{movie.averageRating}},{{movie.characters}},{{movie.primaryName}}
         </div>
         <div v-else>No such movie</div>
 
